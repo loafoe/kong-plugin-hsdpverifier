@@ -6,7 +6,7 @@ COPY go.sum .
 RUN go mod download
 # Build
 COPY . .
-RUN go build -o /build/hsdpverifier hsdpverifier.go
+RUN go build -o /build/hsdpverifier verifier.go
 
 
 FROM kong:2.6.0-alpine
