@@ -9,7 +9,7 @@ COPY . .
 RUN go build -o /build/hsdpverifier verifier.go
 
 
-FROM kong:2.8.0-alpine
+FROM kong:2.8.1-alpine
 USER root
 COPY --from=builder /build/hsdpverifier /usr/local/bin
 USER kong
