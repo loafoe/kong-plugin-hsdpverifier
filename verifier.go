@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"sync"
 
 	"github.com/Kong/go-pdk"
@@ -12,13 +13,11 @@ import (
 
 // Config
 type Config struct {
-	SharedKey string `json:"shared_key"`
-	SecretKey string `json:"secret_key"`
-	verifier  *signer.Signer
-	err       error
+	verifier *signer.Signer
+	err      error
 }
 
-//nolint
+// nolint
 func New() interface{} {
 	return &Config{}
 }
@@ -28,7 +27,9 @@ var doOnce sync.Once
 // Access implements the Access step
 func (conf *Config) Access(kong *pdk.PDK) {
 	doOnce.Do(func() {
-		conf.verifier, conf.err = signer.New(conf.SharedKey, conf.SecretKey)
+		sharedKey := os.Getenv("HSDPVERIFIER_SHARED_KEY")
+		secretKey := os.Getenv("HSDPVERIFIER_SECRET_KEY")
+		conf.verifier, conf.err = signer.New(sharedKey, secretKey)
 	})
 
 	if conf.err != nil {
